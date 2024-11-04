@@ -39,6 +39,8 @@ nome_jogador_temp = "" # Nome temporario do jogador
 ### END VARIABLES ###
 
 
+#Comentário teste#
+
 #Interface Gráfica
 
 
