@@ -49,10 +49,31 @@ class Jogador:
         self.color = color
         self.score = 0
 
-        
+
 ##Class do manage main game logic
 
 class Game:
+    def __init__(self, grid_size, players):
+
+        self.grid_size = grid_size
+        self.board = [["" for _ in range(grid_size)] for _ in range(grid_size)]
+        self.players = players
+        self.current_player_index = 0
+        self.first_move = {player.color: False for player in players}
+    ##Draw the board
+
+    def draw_board(self):
+        cell_size =  SCREEN_WIDTH // self.grid_size
+
+        for row in range(self.grid_size):
+            for col in range(self.grid_size):
+               rect = pygame.Rect(col * cell_size, row * cell_size, cell_size, cell_size)
+               color = player_colors.get(self.board[row][col], WHITE)
+               pygame.draw.rect(screen, color, rect)
+               pygame.draw.rect(screen, BLACK, rect, 1)
+
+    def  
+
 
 # Main menu
 def main_menu():
@@ -74,3 +95,5 @@ def select_game_mode():
 
 
 
+main_menu()
+pygame.quit()
