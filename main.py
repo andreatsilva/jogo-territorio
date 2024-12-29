@@ -34,7 +34,6 @@ player_colors  = {
 font = pygame.font.SysFont(None, 36)
 
 screen = pygame.display.set_caption("Jogo de Território")
-
 ##Draw Text on screen
 def draw_text(text, font, color, surface, x, y):
 
@@ -42,13 +41,11 @@ def draw_text(text, font, color, surface, x, y):
     textrect = textobj.get_rect(center=(x))
     surface.blit(textobj, textrect)
 
-
 class Jogador:
     def __init__(self, name, color):
         self.name = name
         self.color = color
         self.score = 0
-
 
 ##Class do manage main game logic
 
@@ -72,7 +69,33 @@ class Game:
                pygame.draw.rect(screen, color, rect)
                pygame.draw.rect(screen, BLACK, rect, 1)
 
-    def  
+    def place_piece(self, row, col):
+
+        current_player = self.players[self.current_player_index]
+
+        color = current_player
+
+         ##CHeck if its the first move of the player
+        if not self.first_move[color]:
+            ##Checks if is in corner
+            if self.is_corner(row, col, color):
+                self.board[row][col] = color
+                self.first_move[color] = True
+                self.next_turn()
+                return True
+            else:
+                print("First move must be in a corner")
+                return False
+
+        ##Checks if the move is valid
+        if self.is_valid_move(row, col, color):
+            self.board[row][col] = color
+            self.next_turn()
+            return True
+        else: 
+            print("Move most touch same-color piece diagonally")
+            return False
+
 
 
 # Main menu
@@ -82,7 +105,7 @@ def main_menu():
     while running:
         screen.fill((0, 0, 0))
 
-        #draw the minu options
+        #draw the menu options
 
         draw_text("Menu Principal", font, BLACK, screen, SCREEN_WIDTH // 2, 100)
 
