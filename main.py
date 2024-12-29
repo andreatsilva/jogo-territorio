@@ -6,10 +6,10 @@ import random
 # Constants
 GRID_SIZE = 7
 CELL_SIZE = 80
+BOARD_ROWS = 15
+BOARD_COLS = 15
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
-
-
 
 # Colors
 
@@ -45,12 +45,29 @@ def draw_text(text, font, color, surface, x, y):
     textrect = textobj.get_rect(center=(x, y))
     surface.blit(textobj, textrect)
 
-class Jogador:
+class Player:
+
     def __init__(self, name, color):
         self.name = name
         self.color = color
         self.score = 0
+        self.pieces_left = 21
 
+    def place_piece(self):
+
+        if self.pieces_left > 1:
+            self.pieces_left -= 1
+            return True
+        return False
+
+players =  []
+current_player_index = 0
+players.append(Player("Player1", "red"))
+players.append(Player("Player2", "blue"))
+
+
+def draw_grid():
+    
 ##Class do manage main game logic
 
 class Game:
@@ -73,22 +90,7 @@ class Game:
                pygame.draw.rect(screen, color, rect)
                pygame.draw.rect(screen, BLACK, rect, 1)
 
-    def place_piece(self, row, col):
-
-        current_player = self.players[self.current_player_index]
-        color = current_player
-
-         ##CHeck if its the first move of the player
-        if not self.first_move[color]:
-            ##Checks if is in corner
-            if self.is_corner(row, col, color):
-                self.board[row][col] = color
-                self.first_move[color] = True
-                self.next_turn()
-                return True
-            else:
-                print("First move must be in a corner")
-                return False
+   
 
         ##Checks if the move is valid
         if self.is_valid_move(row, col, color):
@@ -114,12 +116,10 @@ class Game:
 
 
 
-
 # Main menu
 def main_menu():
 
     running = True
-
     while running:
 
         screen.fill((0, 0, 0))  # fill the screen with black
@@ -153,10 +153,6 @@ def main_menu():
                     running = False
 
         pygame.display.flip()
-
-
-
-
 
 
 main_menu()
