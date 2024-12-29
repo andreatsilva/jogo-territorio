@@ -72,7 +72,6 @@ class Game:
     def place_piece(self, row, col):
 
         current_player = self.players[self.current_player_index]
-
         color = current_player
 
          ##CHeck if its the first move of the player
@@ -96,7 +95,21 @@ class Game:
             print("Move most touch same-color piece diagonally")
             return False
 
+    ##Check if the cell is the players color
+    def is_corner(self, row, col, color):
 
+        if color == "azul" and row == 0 and col == 0:
+            return True
+        if color == "vermelho" and row == 0 and col == self.grid_size - 1:
+            return True
+        if color == "verde" and row == self.grid_size - 1 and col == 0:
+            return True
+        if color == "amarelo" and row == self.grid_size - 1 and col == self.grid_size - 1:
+            return True
+        return False
+
+
+    
 
 # Main menu
 def main_menu():
