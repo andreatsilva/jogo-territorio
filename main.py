@@ -2,13 +2,13 @@ import pygame
 import random
 
 
+
 # Constants
 GRID_SIZE = 7
 CELL_SIZE = 80
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 
 # Colors
@@ -31,14 +31,18 @@ player_colors  = {
 
 # Fonts
 
-font = pygame.font.SysFont(None, 36)
+pygame.init()
+pygame.font.init()
+font = pygame.font.Font(None, 36)
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("Territory Game")
 
-screen = pygame.display.set_caption("Jogo de Território")
+
 ##Draw Text on screen
 def draw_text(text, font, color, surface, x, y):
 
-    textobj = font.render(text, 1, color)
-    textrect = textobj.get_rect(center=(x))
+    textobj = font.render(text, True, color)
+    textrect = textobj.get_rect(center=(x, y))
     surface.blit(textobj, textrect)
 
 class Jogador:
@@ -109,14 +113,16 @@ class Game:
         return False
 
 
-    
+
 
 # Main menu
 def main_menu():
+
     running = True
 
     while running:
-        screen.fill((0, 0, 0))
+
+        screen.fill((0, 0, 0))  # fill the screen with black
 
         #draw the menu options
 
@@ -125,9 +131,31 @@ def main_menu():
         #Butões
 
         play_button = pygame.Rect(SCREEN_WIDTH // 2 - 100, 200, 200, 50)
+        exit_button = pygame.Rect(SCREEN_WIDTH // 2 - 100, 300, 200, 50)
 
 
-def select_game_mode():
+        pygame.draw.rect(screen, BLUE, play_button)
+        pygame.draw.rect(screen, RED, exit_button)
+
+
+        draw_text("Jogar", font, WHITE, screen, SCREEN_WIDTH // 2, 225)
+        draw_text("Sair", font, WHITE, screen, SCREEN_WIDTH // 2, 325)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = event.pos
+
+                if play_button.collidepoint(mouse_pos):
+                    select_game_mode()
+                if exit_button.collidepoint(mouse_pos):
+                    running = False
+
+        pygame.display.flip()
+
+
+
 
 
 
