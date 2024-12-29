@@ -10,37 +10,24 @@ BOARD_ROWS = 15
 BOARD_COLS = 15
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
-
+LINE_WIDTH = 2
 # Colors
 
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-GRAY = (128, 128, 128)
-BLUE = (0, 0, 255)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-YELLOW = (255, 255, 0)
 
-player_colors  = {
+GRID_COLOR = (200, 200, 200)
 
-    "azul": BLUE,
-    "vermelho": RED,
-    "amarelo": YELLOW,
-    "verde": GREEN   
-}
+player_colors  = ["blue", "red", "green", "yellow"]
 
 # Fonts
 
 pygame.init()
 pygame.font.init()
-font = pygame.font.Font(None, 36)
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Territory Game")
-
+font = pygame.font.SysFont(None, 36)
 
 ##Draw Text on screen
 def draw_text(text, font, color, surface, x, y):
-
     textobj = font.render(text, True, color)
     textrect = textobj.get_rect(center=(x, y))
     surface.blit(textobj, textrect)
@@ -51,23 +38,48 @@ class Player:
         self.name = name
         self.color = color
         self.score = 0
+        self.pieces = []
         self.pieces_left = 21
 
-    def place_piece(self):
+    def place_piece(self, row, col):
 
-        if self.pieces_left > 1:
+        if self.pieces_left > 0 and self.is_valid_move(row, col):
+            self.pieces.append((row, col))
             self.pieces_left -= 1
             return True
         return False
 
+    def is_valid_move(self, row, col):
+
+        if row < 0 or row >= BOARD_ROWS or col < 0 or col >= BOARD_COLS:
+            return False
+
+        if any((pos[0] == row and pos[1] == col) for pos in self.pieces):
+            return False
+
+        for r, c in self.pieces:
+            if abs(r- row) == 1 and c == col or abs(c - col) == 1 and r == row:
+                return True
+
+        if len(self.pieces) == 0:
+            return True
+
+        return False
+
 players =  []
 current_player_index = 0
-players.append(Player("Player1", "red"))
-players.append(Player("Player2", "blue"))
+players.append(Player("Player1", player_colors [0]))
+players.append(Player("Player2", player_colors [1]))
+players.append(Player("Player3", player_colors [2]))
+players.append(Player("Player4", player_colors [3]))
 
 
-def draw_grid():
-    
+
+##Draw player info
+
+
+
+
 ##Class do manage main game logic
 
 class Game:
@@ -81,25 +93,20 @@ class Game:
     ##Draw the board
 
     def draw_board(self):
-        cell_size =  SCREEN_WIDTH // self.grid_size
+        
 
-        for row in range(self.grid_size):
-            for col in range(self.grid_size):
-               rect = pygame.Rect(col * cell_size, row * cell_size, cell_size, cell_size)
-               color = player_colors.get(self.board[row][col], WHITE)
-               pygame.draw.rect(screen, color, rect)
-               pygame.draw.rect(screen, BLACK, rect, 1)
+        for row in range(BOARD_ROWS):
+            for col in range(BOARD_COLS):
+                rect = pygame.rect(col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+                pygame.draw.rect(screen, GRID_COLOR, rect, LINE_WIDTH)
+            
+    ##Draw the player info
 
-   
-
-        ##Checks if the move is valid
-        if self.is_valid_move(row, col, color):
-            self.board[row][col] = color
-            self.next_turn()
-            return True
-        else: 
-            print("Move most touch same-color piece diagonally")
-            return False
+    def draw_player_info():
+        font = pygame.font.SysFont(None, 24)
+        for i, player in enumerate(players):
+            text = font.render(f"(player.name): {player.pieces_left} pieces left", True, pygame.Color(player.color))
+            screen.blit(text, (10, 10 * (i + 1)))     
 
     ##Check if the cell is the players color
     def is_corner(self, row, col, color):
